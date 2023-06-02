@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <algorithm>
 
 #include <SDL.h>
@@ -9,36 +9,36 @@
 int main(int argc, char* argv[])
 {
     // Unused argc, argv
-    (void) argc;
-    (void) argv;
-
+    (void)argc;
+    (void)argv;
+    
     // Initialize SDL
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cout << "SDL could not be initialized!" << std::endl
-                  << "SDL_Error: " << SDL_GetError() << std::endl;
+            << "SDL_Error: " << SDL_GetError() << std::endl;
         return 0;
     }
 
     // Create window
-    SDL_Window *window = SDL_CreateWindow("Procedural Dungeon",
-                                          SDL_WINDOWPOS_UNDEFINED,
-                                          SDL_WINDOWPOS_UNDEFINED,
-                                          SCREEN_WIDTH, SCREEN_HEIGHT,
-                                          SDL_WINDOW_SHOWN);
-    if(!window)
+    SDL_Window* window = SDL_CreateWindow("Procedural Dungeon",
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        SCREEN_WIDTH, SCREEN_HEIGHT,
+        SDL_WINDOW_SHOWN);
+    if (!window)
     {
         std::cout << "Window could not be created!" << std::endl
-                  << "SDL_Error: " << SDL_GetError() << std::endl;
+            << "SDL_Error: " << SDL_GetError() << std::endl;
     }
     else
     {
         // Create renderer
-        SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        if(!renderer)
+        SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        if (!renderer)
         {
             std::cout << "Renderer could not be created!" << std::endl
-                      << "SDL_Error: " << SDL_GetError() << std::endl;
+                << "SDL_Error: " << SDL_GetError() << std::endl;
         }
         else
         {
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
             bool quit = false;
 
             // Event loop
-            while(!quit)
+            while (!quit)
             {
                 SDL_Event e;
 
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
                 SDL_WaitEvent(&e);
 
                 // User requests quit
-                if(e.type == SDL_QUIT)
+                if (e.type == SDL_QUIT)
                 {
                     quit = true;
                 }

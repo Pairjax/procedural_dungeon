@@ -1,5 +1,3 @@
-build
-CMakeLists.txt*
-CMakeCache.txt*
-libraries
-CMakeFiles
+.vs
+.vscode
+out
