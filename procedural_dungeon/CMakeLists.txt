@@ -2,12 +2,17 @@
 # project specific logic here.
 #
 
+set(OpenGL_GL_PREFERENCE "GLVND")
+
 find_package(SDL2 REQUIRED)
+find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+find_package(GLEW REQUIRED)
 
 # Add source to this project's executable.
-add_executable (procedural_dungeon "procedural_dungeon.cpp" "procedural_dungeon.h")
+add_executable (procedural_dungeon "procedural_dungeon.cpp" "procedural_dungeon.h" "engine/game.h")
 
 target_link_libraries(procedural_dungeon SDL2::SDL2 SDL2::SDL2main)
+target_link_libraries(procedural_dungeon GLEW::GLEW)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET procedural_dungeon PROPERTY CXX_STANDARD 20)
