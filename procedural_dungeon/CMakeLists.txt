@@ -9,7 +9,7 @@ find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(GLEW REQUIRED)
 
 # Add source to this project's executable.
-add_executable (procedural_dungeon "procedural_dungeon.cpp"  "engine/game.h" "engine/game-object.h" "engine/game-object.cpp" "engine/camera.h" "engine/camera.cpp" "engine/lighting.h" "engine/lighting.cpp" "engine/material.h" "engine/material.cpp" "engine/model.h" "engine/model.cpp" "engine/shadow.h" "engine/shadow.cpp")
+add_executable (procedural_dungeon "procedural_dungeon.cpp"  "engine/game.h" "engine/game-object.h" "engine/game-object.cpp" "engine/camera.h" "engine/camera.cpp" "engine/lighting.h" "engine/lighting.cpp" "engine/material.h" "engine/material.cpp" "engine/model.h" "engine/model.cpp" "engine/shadow.h" "engine/shadow.cpp" "engine/game.cpp")
 
 target_link_libraries(procedural_dungeon SDL2::SDL2 SDL2::SDL2main)
 target_link_libraries(procedural_dungeon GLEW::GLEW)
