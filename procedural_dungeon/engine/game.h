@@ -14,10 +14,11 @@ public:
     SDL_Renderer* get_renderer();
 
     int init(int screen_width, int screen_height);
-    void terminate();
+    void quit();
 
     int load();
     int handle_input();
+    int start();
     int update(unsigned int delta);
     int render();
     int clean();
@@ -25,4 +26,9 @@ public:
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;
+    SDL_GLContext context;
+
+    GLuint shader_program;
+
+    int quit_flag;
 };
