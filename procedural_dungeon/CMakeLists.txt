@@ -4,14 +4,16 @@
 
 set(OpenGL_GL_PREFERENCE "GLVND")
 
-find_package(SDL2 REQUIRED)
-find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-find_package(GLEW REQUIRED)
-
 # Add source to this project's executable.
 add_executable (procedural_dungeon "procedural_dungeon.cpp"  "engine/game.h" "engine/game-object.h" "engine/game-object.cpp" "engine/camera.h" "engine/camera.cpp" "engine/lighting.h" "engine/lighting.cpp" "engine/material.h" "engine/material.cpp" "engine/model.h" "engine/model.cpp" "engine/shadow.h" "engine/shadow.cpp" "engine/game.cpp")
 
+find_package(SDL2 REQUIRED)
 target_link_libraries(procedural_dungeon SDL2::SDL2 SDL2::SDL2main)
+
+find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+target_link_libraries(procedural_dungeon ${OPENGL_LIBRARY})
+
+find_package(GLEW REQUIRED)
 target_link_libraries(procedural_dungeon GLEW::GLEW)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
