@@ -7,7 +7,6 @@
 #define SCREEN_HEIGHT   600
 
 int main(int argc, char* argv[]) {
-    // Unused argc, argv
     (void)argc;
     (void)argv;
 

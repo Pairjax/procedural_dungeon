@@ -109,6 +109,9 @@ int Game::init(int screen_width, int screen_height) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    ///////////////////////////
+    // REMOVE TO STANDARDIZE
+    ///////////////////////////
     // Vertex Shaders Setup
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertexShaderSource, NULL);
@@ -173,12 +176,21 @@ int Game::init(int screen_width, int screen_height) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    ///////////////////////////
+    // END REMOVE TO STANDARDIZE
+    ///////////////////////////
+
     glViewport(0, 0, screen_width, screen_height);
 
     return 1;
 }
 
 void Game::quit() {
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteProgram(shader_program);
+
+    SDL_GL_DeleteContext(context);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
@@ -224,11 +236,6 @@ int Game::update(unsigned int delta) {
 }
 
 int Game::render() {
-    // Update screen
-    // SDL_RenderPresent(renderer);
-
-    // Generate a buffer
-
     glUseProgram(shader_program);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -236,20 +243,10 @@ int Game::render() {
 
     SDL_GL_SwapWindow(window);
 
-    /*unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);*/
-
     return 1;
 }
 
 int Game::clean() {
-    // Initialize renderer color black for the background
-    // SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
-
-    // Clear screen
-    // SDL_RenderClear(renderer);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
