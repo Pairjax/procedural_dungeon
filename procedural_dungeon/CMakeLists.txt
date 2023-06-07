@@ -19,6 +19,16 @@ target_link_libraries(procedural_dungeon GLEW::GLEW)
 find_package(glm REQUIRED)
 target_link_libraries(procedural_dungeon glm::glm)
 
+include_directories(S:/sdks/assimp/include)
+add_subdirectory(S:/sdks/assimp assimp/)
+target_link_libraries(procedural_dungeon assimp)
+
+set(ZLIB_LIBRARIES zlibstatic)
+set(ENABLE_BOOST_WORKAROUND ON)
+set(BUILD_STATIC_LIB ON)
+set(BUILD_ASSIMP_TOOLS  ON)
+set(ASSIMP_BUILD_STATIC_LIB ON)
+
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET procedural_dungeon PROPERTY CXX_STANDARD 20)
 endif()
