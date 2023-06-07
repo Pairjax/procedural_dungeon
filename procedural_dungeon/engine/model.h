@@ -1,4 +1,5 @@
 #include "shader.h"
+#include "mesh.h"
 
 #include <string>
 #include <fstream>
@@ -6,22 +7,24 @@
 #include <iostream>
 #include <vector>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 class Model
 {
 public:
-    Model(char* path)
-    {
-        // loadModel(path);
-    }
-    void Draw(Shader& shader);
+    Model(char* path) {};
+
+    void draw(Shader& shader);
 private:
     // model data
-    /*vector<Mesh> meshes;
-    string directory;
+    std::vector<Mesh> meshes;
+    std::string directory;
 
-    void loadModel(string path);
-    void processNode(aiNode* node, const aiScene* scene);
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type,
-        string typeName);*/
+    void load_model(std::string path);
+    void process_node(aiNode* node, const aiScene* scene);
+    Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
+    std::vector<Texture> load_material_textures(aiMaterial* mat, aiTextureType type,
+        std::string type_name);
 };
