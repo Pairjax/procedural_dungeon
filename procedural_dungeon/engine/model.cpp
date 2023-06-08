@@ -2,7 +2,7 @@
 
 unsigned int texture_from_file(const char* path, const std::string& directory, bool gamma = false);
 
-Model::Model(char* path) {
+Model::Model(std::string const& path) {
 	load_model(path);
 }
 

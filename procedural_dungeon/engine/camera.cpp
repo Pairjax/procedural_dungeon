@@ -1,5 +1,16 @@
 #include "camera.h"
 
+Camera::Camera() {
+    position = glm::vec3(0.0f, 0.0f, 0.0f);
+    up = glm::vec3(0.0f, 1.0f, 0.0f);
+    yaw = YAW_DEFAULT;
+    pitch = PITCH_DEFAULT;
+    front = glm::vec3(0.0f, 0.0f, -1.0f);
+    movement_speed = SPEED_DEFAULT;
+    mouse_sensitivity = SENSITIVITY_DEFAULT;
+    zoom = ZOOM_DEFAULT;
+}
+
 Camera::Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), 
                 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), 
                 float yaw = YAW_DEFAULT, float pitch = PITCH_DEFAULT):

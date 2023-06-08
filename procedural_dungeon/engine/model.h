@@ -1,5 +1,6 @@
 #include "shader.h"
 #include "mesh.h"
+
 #include "../externals/stb_image.h"
 
 #include <string>
@@ -13,10 +14,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-class Model
-{
+class Model {
 public:
-    Model(char* path) {};
+    Model(std::string const& path);
 
     void draw(Shader& shader);
 private:

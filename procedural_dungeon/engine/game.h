@@ -1,4 +1,6 @@
 #include "camera.h"
+#include "shader.h"
+#include "model.h"
 
 #include <SDL.h>
 #include <GL/glew.h>
@@ -7,6 +9,8 @@
 #include <algorithm>
 #include <vector>
 #include <memory>
+#include <filesystem>
+#include <string>
 
 class Game {
 public:
@@ -30,7 +34,12 @@ private:
     SDL_Renderer* renderer;
     SDL_GLContext context;
 
+    Shader default_shader;
+    std::vector<Model> models;
+
     GLuint shader_program;
+
+    Camera player_camera;
 
     int quit_flag;
 };

@@ -1,5 +1,9 @@
 #include "shader.h"
 
+Shader::Shader() {
+
+}
+
 Shader::Shader(const char* vertex_path, const char* fragment_path) {
     std::string vertex_code;
     std::string fragment_code;
@@ -11,7 +15,7 @@ Shader::Shader(const char* vertex_path, const char* fragment_path) {
     fragment_shader_file.exceptions(std::ifstream::badbit);
 
     // Capture input stream into string
-    try {
+    try { 
         vertex_shader_file.open(vertex_path);
         fragment_shader_file.open(fragment_path);
 
