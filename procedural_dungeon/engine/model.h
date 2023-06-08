@@ -1,10 +1,12 @@
 #include "shader.h"
 #include "mesh.h"
+#include "../externals/stb_image.h"
 
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <map>
 #include <vector>
 
 #include <assimp/Importer.hpp>
@@ -20,6 +22,7 @@ public:
 private:
     // model data
     std::vector<Mesh> meshes;
+    std::vector<Texture> textures_loaded;
     std::string directory;
 
     void load_model(std::string path);
