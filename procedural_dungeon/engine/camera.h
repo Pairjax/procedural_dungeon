@@ -52,7 +52,7 @@ public:
         float yaw, float pitch);
 
     // Returns view matrix calculated from Euler Angles and LookAt Matrix
-    glm::mat4 GetViewMatrix();
+    glm::mat4 get_view_matrix();
 
     void process_keyboard_input(Camera_Movement direction, float delta_time);
 

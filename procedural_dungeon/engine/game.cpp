@@ -13,6 +13,9 @@ SDL_Renderer* Game::get_renderer() {
 }
 
 int Game::init(int screen_width, int screen_height) {
+    this->screen_width = screen_width;
+    this->screen_height = screen_height;
+
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cout << "SDL could not be initialized!" << std::endl
@@ -47,8 +50,8 @@ int Game::init(int screen_width, int screen_height) {
     }
 
     // Context Setup
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
@@ -74,12 +77,14 @@ int Game::init(int screen_width, int screen_height) {
     }
 
     glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     stbi_set_flip_vertically_on_load(true);
 
-    default_shader = Shader("shaders/shader.frag", "shaders/shader.vert");
-    models.push_back(Model("resources/objects/backpack/backpack.obj"));
+    default_shader = Shader("C:/Users/pairj/Documents/procedural_dungeon/procedural_dungeon/engine/shaders/shader.vs", "C:/Users/pairj/Documents/procedural_dungeon/procedural_dungeon/engine/shaders/shader.fs");
+
+    models.push_back(Model("C:/Users/pairj/Documents/procedural_dungeon/procedural_dungeon/engine/resources/objects/backpack/backpack.obj"));
 
     glViewport(0, 0, screen_width, screen_height);
 
@@ -95,10 +100,7 @@ void Game::quit() {
 }
 
 int Game::start() {
-    // Useful code snippet for getting window size
-    /*int width, height;
-
-    SDL_GetWindowSize(window, &width, &height);*/
+    SDL_GetWindowSize(window, &screen_width, &screen_height);
     GLdouble delta_time = 0.0f;
     Uint64 last_frame = 0L;
     Uint64 current_frame = SDL_GetPerformanceCounter();
@@ -137,6 +139,22 @@ int Game::render() {
     // glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
+
+    default_shader.use();
+    glm::mat4 projection = glm::perspective(glm::radians(player_camera.zoom), (float)screen_width / (float)screen_height, 0.1f, 100.0f);
+    glm::mat4 view = player_camera.get_view_matrix();
+
+    default_shader.set_mat4("projection", projection);
+    default_shader.set_mat4("view", view);
+
+    for (auto& model : models) {
+        glm::mat4 model_matrix = glm::mat4(1.0f);
+        model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 0.0f, -1.5f));
+        model_matrix = glm::scale(model_matrix, glm::vec3(0.2f, 0.2f, 0.2f));
+
+        default_shader.set_mat4("model", model_matrix);
+        model.draw(default_shader);
+    }
 
     SDL_GL_SwapWindow(window);
 

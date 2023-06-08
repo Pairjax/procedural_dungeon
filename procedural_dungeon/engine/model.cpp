@@ -17,7 +17,7 @@ void Model::load_model(std::string path) {
     const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        std::cout << "Assimp Error! Reason:" << import.GetErrorString() << std::endl;
+        std::cout << "Assimp Error! Reason: " << import.GetErrorString() << std::endl;
         return;
     }
 

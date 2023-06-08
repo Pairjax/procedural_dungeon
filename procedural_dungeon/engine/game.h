@@ -2,6 +2,9 @@
 #include "shader.h"
 #include "model.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <SDL.h>
 #include <GL/glew.h>
 
@@ -40,6 +43,9 @@ private:
     GLuint shader_program;
 
     Camera player_camera;
+
+    int screen_width;
+    int screen_height;
 
     int quit_flag;
 };
