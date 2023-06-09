@@ -82,9 +82,11 @@ int Game::init(int screen_width, int screen_height) {
 
     stbi_set_flip_vertically_on_load(true);
 
-    default_shader = Shader("C:/Users/pairj/Documents/procedural_dungeon/procedural_dungeon/engine/shaders/shader.vs", "C:/Users/pairj/Documents/procedural_dungeon/procedural_dungeon/engine/shaders/shader.fs");
+    default_shader = Shader("shaders/shader.vs", "shaders/shader.fs");
 
-    models.push_back(Model("C:/Users/pairj/Documents/procedural_dungeon/procedural_dungeon/engine/resources/objects/backpack/backpack.obj"));
+    // models.push_back(Model("resources/backpack/backpack.obj"));
+    // Dungeon Tiles
+    models.push_back(Model("resources/dungeon_tiles/dungeon_tile_big_l.obj"));
 
     glViewport(0, 0, screen_width, screen_height);
 
@@ -149,8 +151,8 @@ int Game::render() {
 
     for (auto& model : models) {
         glm::mat4 model_matrix = glm::mat4(1.0f);
-        model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 0.0f, -1.5f));
-        model_matrix = glm::scale(model_matrix, glm::vec3(0.2f, 0.2f, 0.2f));
+        model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, -1.0f, -1.5f));
+        model_matrix = glm::scale(model_matrix, glm::vec3(0.1f, 0.1f, 0.1f));
 
         default_shader.set_mat4("model", model_matrix);
         model.draw(default_shader);
