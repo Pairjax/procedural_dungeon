@@ -23,8 +23,8 @@ const glm::vec2 direction[4] = {
 
 enum Door_Direction {
 	NORTH = 0,
-	SOUTH = 1,
-	EAST = 2,
+	EAST = 1,
+	SOUTH = 2,
 	WEST = 3,
 	EMPTY = 4, // Reserved for empty squares
 };
@@ -59,6 +59,7 @@ private:
 	DungeonTile rotate_tile(DungeonTile tile, int turns);
 
 	void imprint_tile(DungeonTile tile, glm::vec2 location);
+	Door_Direction close_adjacent_door(Door_Direction door_direction, glm::vec2 center);
 
 	DungeonTile get_random_tile();
 };

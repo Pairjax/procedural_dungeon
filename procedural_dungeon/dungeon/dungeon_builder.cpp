@@ -26,10 +26,17 @@ DungeonTile DungeonBuilder::rotate_tile(DungeonTile tile, int turns) {
 	current_tile.filled_squares.clear();
 	current_tile.square_doors.clear();
 
+	// Rotate 90 degrees for each turn
 	for (int i = 0; i < turns; i++) {
 		for (glm::vec2 square : last_tile.filled_squares) {
+			// 2D vector rotated 90 degrees is (-y, x)
 			glm::vec2 new_square = glm::vec2(-square.y, square.x);
-			std::vector<Door_Direction> new_square_doors = tile.square_doors[std::pair(square.x, square.y)];
+
+			// Cardinal directions of doors in this square are rotated over as well
+			std::vector<Door_Direction> new_square_doors;
+			for (auto& door : tile.square_doors[std::pair(square.x, square.y)]) {
+				new_square_doors.push_back((Door_Direction) (door + 1));
+			}
 
 			current_tile.filled_squares.push_back(new_square);
 			current_tile.square_doors[std::pair(new_square.x, new_square.y)] = new_square_doors;
@@ -52,20 +59,10 @@ void DungeonBuilder::imprint_tile(DungeonTile tile, glm::vec2 location)
 
 		std::vector<Door_Direction> open_directions;
 		for (auto& door_direction : doors) {
-			glm::vec2 adjacent_square = global_coords + direction[door_direction];
+			Door_Direction direction = close_adjacent_door(door_direction, global_coords);
 
-			bool is_adjacent_empty = dungeon_map[(int)adjacent_square.x]
-												[(int)adjacent_square.y][0] == EMPTY;
-			
-			if (is_adjacent_empty) {
-				// If no adjacents, mark a new open door.
-				open_directions.push_back(door_direction);
-			} else {
-				// Otherwise, ensure doors that are adjacent are properly closed.
-				Door_Direction opposite = (Door_Direction) ((door_direction + 2) % 4);
-				std::pair closed_door = std::pair(adjacent_square, opposite);
-
-				free_doors.erase(std::remove(free_doors.begin(), free_doors.end(), closed_door), free_doors.end());
+			if (direction != EMPTY) {
+				open_directions.push_back(direction);
 			}
 		}
 
@@ -73,8 +70,34 @@ void DungeonBuilder::imprint_tile(DungeonTile tile, glm::vec2 location)
 	}
 }
 
-DungeonTile DungeonBuilder::get_random_tile()
-{
+Door_Direction DungeonBuilder::close_adjacent_door(Door_Direction door_direction, glm::vec2 center) {
+	glm::vec2 adjacent_square = center + direction[door_direction];
+
+	bool is_adjacent_empty = dungeon_map[(int)adjacent_square.x]
+		[(int)adjacent_square.y][0] == EMPTY;
+
+	if (is_adjacent_empty) {
+		// If no adjacents, mark a new open door.
+		return door_direction;
+	} else {
+		// Otherwise, ensure doors that are adjacent are properly closed.
+		Door_Direction opposite = (Door_Direction)((door_direction + 2) % 4);
+		std::pair closed_door = std::pair(adjacent_square, opposite);
+
+		for (int i = 0; i < free_doors.size(); i++) {
+			std::pair square = free_doors[i];
+
+			if (square.first != adjacent_square) { continue; }
+
+			std::vector<Door_Direction> open_doors = square.second;
+			free_doors[i].second.erase(std::remove(open_doors.begin(), open_doors.end(), opposite));
+		}
+	}
+
+	return EMPTY;
+}
+
+DungeonTile DungeonBuilder::get_random_tile() {
 	int index = std::rand() % tile_pool.size();
 	return tile_pool[index];
 }
