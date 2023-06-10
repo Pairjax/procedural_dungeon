@@ -10,7 +10,27 @@ std::vector<std::pair<Model, glm::vec3>> DungeonBuilder::generate_dungeon() {
 	imprint_tile(get_random_tile(), start_indexes);
 
 	for (int i = 0; i < TILE_MAX - 1; i++) {
+		DungeonTile tile = get_random_tile();
 
+		bool tile_found = false;
+		for (int j = 0; j < free_doors.size(); j++) {
+			glm::vec2 room_position = free_doors[j].first;
+
+			for (Door_Direction room_door : free_doors[j].second) {
+				// Check for valid position
+				glm::vec2 free_square = room_position + direction[room_door];
+				DungeonTile final_tile = get_valid_tile_position(room_door, room_position, tile);
+
+				// Check if no valid spot was found
+				if (final_tile.filled_squares.empty()) { continue; }
+
+				tile_found = true;
+				imprint_tile(final_tile, free_square);
+				break;
+			}
+
+			if (tile_found) { break; }
+		}
 	}
 
 	return std::vector<std::pair<Model, glm::vec3>>();
@@ -61,6 +81,7 @@ void DungeonBuilder::imprint_tile(DungeonTile tile, glm::vec2 location)
 		for (auto& door_direction : doors) {
 			Door_Direction direction = close_adjacent_door(door_direction, global_coords);
 
+			// If no adjacent door was found, instead mark a new open door.
 			if (direction != EMPTY) {
 				open_directions.push_back(direction);
 			}
@@ -77,7 +98,7 @@ Door_Direction DungeonBuilder::close_adjacent_door(Door_Direction door_direction
 		[(int)adjacent_square.y][0] == EMPTY;
 
 	if (is_adjacent_empty) {
-		// If no adjacents, mark a new open door.
+		// If no adjacents, return a new open door.
 		return door_direction;
 	} else {
 		// Otherwise, ensure doors that are adjacent are properly closed.
@@ -95,6 +116,11 @@ Door_Direction DungeonBuilder::close_adjacent_door(Door_Direction door_direction
 	}
 
 	return EMPTY;
+}
+
+DungeonTile DungeonBuilder::get_valid_tile_position(Door_Direction door_direction, glm::vec2 center,
+													DungeonTile tile) {
+	return tile;
 }
 
 DungeonTile DungeonBuilder::get_random_tile() {

@@ -59,7 +59,11 @@ private:
 	DungeonTile rotate_tile(DungeonTile tile, int turns);
 
 	void imprint_tile(DungeonTile tile, glm::vec2 location);
+
 	Door_Direction close_adjacent_door(Door_Direction door_direction, glm::vec2 center);
+
+	DungeonTile get_valid_tile_position(Door_Direction door_direction, glm::vec2 center, 
+										DungeonTile tile);
 
 	DungeonTile get_random_tile();
 };
