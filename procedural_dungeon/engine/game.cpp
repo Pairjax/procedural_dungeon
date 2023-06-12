@@ -84,12 +84,9 @@ int Game::init(int screen_width, int screen_height) {
 
     default_shader = Shader("shaders/shader.vs", "shaders/shader.fs");
 
-    // models.push_back(Model("resources/backpack/backpack.obj"));
     // Dungeon Tiles
-    // models.push_back(Model("resources/dungeon_tiles/dungeon_tile_big_l.obj"));
-
     dungeon_builder = DungeonBuilder();
-    /*dungeon_builder.add_tile(
+    dungeon_builder.add_tile(
         DungeonTile(
             Model("resources/dungeon_tiles/dungeon_tile_big_l.obj"),
             { glm::vec2(0,0), glm::vec2(0,1), glm::vec2(1,1), glm::vec2(1,2)},
@@ -100,7 +97,7 @@ int Game::init(int screen_width, int screen_height) {
                 {std::pair(1,2), {EAST}}
             }
         )
-    );*/
+    );
     dungeon_builder.add_tile(
         DungeonTile(
             Model("resources/dungeon_tiles/dungeon_tile_plus.obj"),
@@ -110,7 +107,7 @@ int Game::init(int screen_width, int screen_height) {
             }
         )
     );
-    /*dungeon_builder.add_tile(
+    dungeon_builder.add_tile(
         DungeonTile(
             Model("resources/dungeon_tiles/dungeon_tile_t.obj"),
             { glm::vec2(0,0), glm::vec2(0,1), glm::vec2(1,1), glm::vec2(-1, 1)},
@@ -121,8 +118,8 @@ int Game::init(int screen_width, int screen_height) {
                 {std::pair(-1,1), {NORTH}},
             }
         )
-    );*/
-    /*dungeon_builder.add_tile(
+    );
+    dungeon_builder.add_tile(
         DungeonTile(
             Model("resources/dungeon_tiles/dungeon_tile_small_l.obj"),
             { glm::vec2(0,0), glm::vec2(0,1), glm::vec2(1,1) },
@@ -132,8 +129,7 @@ int Game::init(int screen_width, int screen_height) {
                 {std::pair(1,1), {EAST}},
             }
         )
-    );*/
-    /*
+    );
     dungeon_builder.add_tile(
         DungeonTile(
             Model("resources/dungeon_tiles/dungeon_tile_horizontal_x.obj"),
@@ -143,7 +139,7 @@ int Game::init(int screen_width, int screen_height) {
                 {std::pair(0,1), {NORTH, EAST}},
             }
             )
-    );*/
+    );
 
     dungeon_tiles = dungeon_builder.generate_dungeon();
 
