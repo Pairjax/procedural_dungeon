@@ -86,7 +86,31 @@ int Game::init(int screen_width, int screen_height) {
 
     // models.push_back(Model("resources/backpack/backpack.obj"));
     // Dungeon Tiles
-    models.push_back(Model("resources/dungeon_tiles/dungeon_tile_big_l.obj"));
+    // models.push_back(Model("resources/dungeon_tiles/dungeon_tile_big_l.obj"));
+
+    dungeon_builder = DungeonBuilder();
+    dungeon_builder.add_tile(
+        DungeonTile(
+            Model("resources/dungeon_tiles/dungeon_tile_big_l.obj"),
+            { glm::vec2(0,0), glm::vec2(0,1), glm::vec2(1,1), glm::vec2(1,2)},
+            {
+                {std::pair(0,0), {EAST, SOUTH}},
+                {std::pair(0,1), {NORTH}},
+                {std::pair(1,1), {}},
+                {std::pair(1,2), {EAST}}
+            }
+        )
+    );
+    dungeon_builder.add_tile(
+        DungeonTile(
+            Model("resources/dungeon_tiles/dungeon_tile_plus.obj"),
+            { glm::vec2(0,0) },
+            {
+                {std::pair(0,0), {NORTH, EAST, SOUTH, WEST}}
+            }
+        )
+    );
+    models = dungeon_builder.generate_dungeon();
 
     glViewport(0, 0, screen_width, screen_height);
 
@@ -149,9 +173,11 @@ int Game::render() {
     default_shader.set_mat4("projection", projection);
     default_shader.set_mat4("view", view);
 
-    for (auto& model : models) {
+    for (auto& modelPair : models) {
+        Model model = modelPair.first;
+        glm::vec3 location = modelPair.second;
         glm::mat4 model_matrix = glm::mat4(1.0f);
-        model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, -1.0f, -1.5f));
+        model_matrix = glm::translate(model_matrix, location);
         model_matrix = glm::scale(model_matrix, glm::vec3(0.1f, 0.1f, 0.1f));
 
         default_shader.set_mat4("model", model_matrix);

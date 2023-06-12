@@ -1,3 +1,6 @@
+#ifndef MODEL_HEADER
+#define MODEL_HEADER
+
 #include "shader.h"
 #include "mesh.h"
 
@@ -31,3 +34,5 @@ private:
     std::vector<Texture> load_material_textures(aiMaterial* mat, aiTextureType type,
         std::string type_name);
 };
+
+#endif

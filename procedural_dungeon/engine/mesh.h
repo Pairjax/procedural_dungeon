@@ -1,3 +1,6 @@
+#ifndef MESH_HEADER
+#define MESH_HEADER
+
 #include "shader.h"
 
 #include <glm/glm.hpp>
@@ -36,3 +39,5 @@ private:
 
     void setup_mesh();
 };
+
+#endif

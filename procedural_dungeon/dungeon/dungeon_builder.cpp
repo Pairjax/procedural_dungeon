@@ -18,21 +18,28 @@ std::vector<std::pair<Model, glm::vec3>> DungeonBuilder::generate_dungeon() {
 
 			for (Door_Direction room_door : free_doors[j].second) {
 				// Check for valid position
-				glm::vec2 free_square = room_position + direction[room_door];
-				DungeonTile final_tile = get_valid_tile_position(room_door, room_position, tile);
+				// glm::vec2 free_square = room_position + direction[room_door];
+				std::pair<glm::vec2, DungeonTile> final_tile = get_valid_tile_position(room_door, room_position, tile);
 
 				// Check if no valid spot was found
-				if (final_tile.filled_squares.empty()) { continue; }
+				if (final_tile.first.x == -1) { continue; }
 
 				tile_found = true;
-				imprint_tile(final_tile, free_square);
+				imprint_tile(final_tile.second, final_tile.first);
+				tiles.push_back(std::pair(final_tile.first, final_tile.second));
 				break;
 			}
 
 			if (tile_found) { break; }
 		}
 	}
-
+	std::vector<std::pair<Model, glm::vec3>> dungeon;
+	for (auto& tile : tiles) {
+		Model tile_model = tile.second.model;
+		// translates the 2d vector to 3d in front of camera
+		glm::vec3 tile_location = glm::vec3(tile.first.x*0.1f, -1.0f, (tile.first.y * 0.1f) - 1.5f);
+		dungeon.push_back(std::pair(tile_model, tile_location));
+	}
 	return std::vector<std::pair<Model, glm::vec3>>();
 }
 
@@ -118,9 +125,84 @@ Door_Direction DungeonBuilder::close_adjacent_door(Door_Direction door_direction
 	return EMPTY;
 }
 
-DungeonTile DungeonBuilder::get_valid_tile_position(Door_Direction door_direction, glm::vec2 center,
+std::pair<glm::vec2, DungeonTile> DungeonBuilder::get_valid_tile_position(Door_Direction target_door_direction, glm::vec2 target_door_location,
 													DungeonTile tile) {
-	return tile;
+	glm::vec2 free_square = target_door_location + direction[target_door_direction];
+	Door_Direction opposite = (Door_Direction)((target_door_direction + 2) % 4);
+	for (int i = 0; i < 4; i++) {
+		bool is_connected_square_valid = true;
+		for (auto& connected_square : tile.filled_squares) {
+			
+			std::vector<Door_Direction> doors = tile.square_doors[
+				std::pair((int)connected_square.x, (int)connected_square.y)
+			];
+			for (Door_Direction door : doors) {
+				if (door == opposite) {
+					// Check if all other squares are valid
+					for (auto& tile_square : tile.filled_squares) {
+						bool square_valid = is_square_valid(tile_square, tile.square_doors[std::pair(tile_square.x, tile_square.y)]);
+						if (!square_valid) {
+							is_connected_square_valid = false;
+							break;
+						}
+					}
+				} else {
+					is_connected_square_valid = false;
+					break;
+				}
+			}
+			if (is_connected_square_valid) {
+				glm::vec2 coord = free_square - connected_square;
+				return std::pair(coord, tile);
+			}
+		}
+		tile = rotate_tile(tile, 1);
+	}
+
+	// Fail; no valid position found
+	return std::pair(glm::vec2(-1,-1), tile);
+}
+
+bool DungeonBuilder::is_square_valid(glm::vec2 room_location, std::vector<Door_Direction> doors)
+{
+	std::vector<Door_Direction> occupied_square = dungeon_map[(int)room_location.x][(int)room_location.y];
+	if (occupied_square.empty()) { return false; } // Checks if the square is empty of doors, which means it exists
+	if (occupied_square[0] != EMPTY) { return false; } // A room exists here
+
+	for (int i = 0; i < 4; i++) {
+		Door_Direction facing_direction = (Door_Direction)i;
+		Door_Direction opposite = (Door_Direction)((facing_direction + 2) % 4);
+
+		glm::vec2 adjacent_room = room_location + direction[i];
+		std::vector<Door_Direction> adjacent_room_doors = dungeon_map[(int)adjacent_room.x][(int)adjacent_room.y];
+		
+		bool adjacent_door_exists = false;
+		bool adjacent_room_exists = false;
+		for (Door_Direction adjacent_room_door : adjacent_room_doors) {
+			if (adjacent_room_door == EMPTY) {
+				adjacent_room_exists = true;
+				break;
+			}
+			if (adjacent_room_door == opposite) {
+				adjacent_door_exists = true;
+				break;
+			}
+		}
+
+		if (!adjacent_room_exists) { break; }
+		if (!adjacent_door_exists) { return false; }
+
+		bool door_exists = false;
+		for (Door_Direction door : doors) {
+
+			if (door == facing_direction) {
+				door_exists = true;
+			}
+		}
+
+		if (!door_exists) { return false; }
+	}
+	return true;
 }
 
 DungeonTile DungeonBuilder::get_random_tile() {

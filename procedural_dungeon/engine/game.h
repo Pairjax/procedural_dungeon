@@ -1,6 +1,7 @@
 #include "camera.h"
 #include "shader.h"
 #include "model.h"
+#include "../dungeon/dungeon_builder.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -38,11 +39,13 @@ private:
     SDL_GLContext context;
 
     Shader default_shader;
-    std::vector<Model> models;
+    std::vector<std::pair<Model, glm::vec3>> models;
 
     GLuint shader_program;
 
     Camera player_camera;
+
+    DungeonBuilder dungeon_builder;
 
     int screen_width;
     int screen_height;

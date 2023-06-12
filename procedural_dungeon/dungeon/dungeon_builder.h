@@ -16,8 +16,8 @@
 // Access using Dungeon_Door_Direction
 const glm::vec2 direction[4] = {
 	glm::vec2(0, 1),
-	glm::vec2(0, -1),
 	glm::vec2(1, 0),
+	glm::vec2(0, -1),
 	glm::vec2(-1, 0),
 };
 
@@ -55,6 +55,8 @@ private:
 	// A list of every coordinate with open doors.
 	std::vector<std::pair<glm::vec2, std::vector<Door_Direction>>> free_doors;
 
+	std::vector<std::pair<glm::vec2, DungeonTile>> tiles;
+
 	// Turns are in 90 degrees clockwise
 	DungeonTile rotate_tile(DungeonTile tile, int turns);
 
@@ -62,8 +64,10 @@ private:
 
 	Door_Direction close_adjacent_door(Door_Direction door_direction, glm::vec2 center);
 
-	DungeonTile get_valid_tile_position(Door_Direction door_direction, glm::vec2 center, 
+	std::pair<glm::vec2, DungeonTile> get_valid_tile_position(Door_Direction door_direction, glm::vec2 center,
 										DungeonTile tile);
+
+	bool is_square_valid(glm::vec2 room_location, std::vector<Door_Direction> doors);
 
 	DungeonTile get_random_tile();
 };
