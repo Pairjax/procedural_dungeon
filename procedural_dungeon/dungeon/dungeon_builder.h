@@ -28,7 +28,7 @@ enum Door_Direction {
 	EAST = 1,
 	SOUTH = 2,
 	WEST = 3,
-	EMPTY = 4, // Reserved for empty squares
+	NO_SQUARE = 4, // Reserved for empty squares
 };
 
 struct DungeonTile {
@@ -37,13 +37,17 @@ struct DungeonTile {
 	std::vector<glm::vec2> filled_squares;
 	// Each square in the dungeon may have 0-4 doors. Connected squares do not count.
 	std::map<std::pair<int, int>, std::vector<Door_Direction>> square_doors;
+	// Ending location
+	glm::vec3 location;
+	// Ending rotation in 90 degree increments;
+	int rotation;
 };
 
 class DungeonBuilder {
 public:
 	DungeonBuilder();
 
-	std::vector<std::pair<Model, glm::vec3>> generate_dungeon();
+	std::vector<DungeonTile> generate_dungeon();
 
 	void add_tile(DungeonTile tile);
 
@@ -51,8 +55,8 @@ private:
 	// Pool of all possible tiles
 	std::vector<DungeonTile> tile_pool;
 
-	// We only need to know what doors are in a given squrae. Null = No tile there.
-	std::vector<Door_Direction> dungeon_map[DUNGEON_MAP_HEIGHT][DUNGEON_MAP_WIDTH];
+	// We only need to know what doors are in a given squrae.
+	std::vector<Door_Direction> dungeon_map[DUNGEON_MAP_WIDTH][DUNGEON_MAP_HEIGHT];
 
 	// A list of every coordinate with open doors.
 	std::vector<std::pair<glm::vec2, std::vector<Door_Direction>>> free_doors;

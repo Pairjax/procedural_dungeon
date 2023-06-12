@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <string>
 
+
 class Game {
 public:
     Game();
@@ -39,13 +40,13 @@ private:
     SDL_GLContext context;
 
     Shader default_shader;
-    std::vector<std::pair<Model, glm::vec3>> models;
 
     GLuint shader_program;
 
     Camera player_camera;
 
     DungeonBuilder dungeon_builder;
+    std::vector<DungeonTile> dungeon_tiles;
 
     int screen_width;
     int screen_height;
