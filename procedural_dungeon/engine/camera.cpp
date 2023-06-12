@@ -5,7 +5,7 @@ Camera::Camera() {
     up = glm::vec3(0.0f, 1.0f, 0.0f);
     yaw = YAW_DEFAULT;
     pitch = PITCH_DEFAULT;
-    front = glm::vec3(0.0f, -0.3f, -1.0f);
+    front = glm::vec3(0.0f, 0.0f, -1.0f);
     movement_speed = SPEED_DEFAULT;
     mouse_sensitivity = SENSITIVITY_DEFAULT;
     zoom = ZOOM_DEFAULT;

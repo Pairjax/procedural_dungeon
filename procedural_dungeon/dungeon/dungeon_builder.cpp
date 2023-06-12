@@ -1,7 +1,11 @@
 #include "dungeon_builder.h"
 
 DungeonBuilder::DungeonBuilder() {
-
+	for (int i = 0; i < DUNGEON_MAP_HEIGHT; i++) {
+		for (int j = 0; j < DUNGEON_MAP_WIDTH; j++) {
+			dungeon_map[i][j].push_back(EMPTY);
+		}
+	}
 }
 
 std::vector<std::pair<Model, glm::vec3>> DungeonBuilder::generate_dungeon() {
@@ -33,11 +37,12 @@ std::vector<std::pair<Model, glm::vec3>> DungeonBuilder::generate_dungeon() {
 			if (tile_found) { break; }
 		}
 	}
+
 	std::vector<std::pair<Model, glm::vec3>> dungeon;
 	for (auto& tile : tiles) {
 		Model tile_model = tile.second.model;
 		// translates the 2d vector to 3d in front of camera
-		glm::vec3 tile_location = glm::vec3(tile.first.x*0.1f, -1.0f, (tile.first.y * 0.1f) - 1.5f);
+		glm::vec3 tile_location = glm::vec3(tile.first.x*0.1f, 0.0f, (tile.first.y * 0.1f) - 1.5f);
 		dungeon.push_back(std::pair(tile_model, tile_location));
 	}
 	return std::vector<std::pair<Model, glm::vec3>>();
@@ -77,10 +82,9 @@ DungeonTile DungeonBuilder::rotate_tile(DungeonTile tile, int turns) {
 	return last_tile;
 }
 
-void DungeonBuilder::imprint_tile(DungeonTile tile, glm::vec2 location)
-{
+void DungeonBuilder::imprint_tile(DungeonTile tile, glm::vec2 location) {
 	for (glm::vec2 square : tile.filled_squares) {
-		std::vector<Door_Direction> doors = tile.square_doors[std::pair(square.x, square.y)];
+		std::vector<Door_Direction> doors = tile.square_doors[std::pair((int)square.x, (int)square.y)];
 		glm::vec2 global_coords = location + square;
 		dungeon_map[(int) global_coords.x][(int) global_coords.y] = doors;
 
@@ -101,6 +105,13 @@ void DungeonBuilder::imprint_tile(DungeonTile tile, glm::vec2 location)
 Door_Direction DungeonBuilder::close_adjacent_door(Door_Direction door_direction, glm::vec2 center) {
 	glm::vec2 adjacent_square = center + direction[door_direction];
 
+	std::vector<Door_Direction> adjacent_doors = dungeon_map[(int)adjacent_square.x]
+		[(int)adjacent_square.y];
+
+	if (adjacent_doors.empty()) { 
+		std::cout << "Error! Invalid state reached. Cannot have a square with no doors." << std::endl;
+	}
+
 	bool is_adjacent_empty = dungeon_map[(int)adjacent_square.x]
 		[(int)adjacent_square.y][0] == EMPTY;
 
@@ -109,7 +120,7 @@ Door_Direction DungeonBuilder::close_adjacent_door(Door_Direction door_direction
 		return door_direction;
 	} else {
 		// Otherwise, ensure doors that are adjacent are properly closed.
-		Door_Direction opposite = (Door_Direction)((door_direction + 2) % 4);
+		Door_Direction opposite = (Door_Direction)((door_direction + 2) % DOOR_SIDES);
 		std::pair closed_door = std::pair(adjacent_square, opposite);
 
 		for (int i = 0; i < free_doors.size(); i++) {
@@ -128,8 +139,8 @@ Door_Direction DungeonBuilder::close_adjacent_door(Door_Direction door_direction
 std::pair<glm::vec2, DungeonTile> DungeonBuilder::get_valid_tile_position(Door_Direction target_door_direction, glm::vec2 target_door_location,
 													DungeonTile tile) {
 	glm::vec2 free_square = target_door_location + direction[target_door_direction];
-	Door_Direction opposite = (Door_Direction)((target_door_direction + 2) % 4);
-	for (int i = 0; i < 4; i++) {
+	Door_Direction opposite = (Door_Direction)((target_door_direction + 2) % DOOR_SIDES);
+	for (int i = 0; i < DOOR_SIDES; i++) {
 		bool is_connected_square_valid = true;
 		for (auto& connected_square : tile.filled_squares) {
 			
@@ -169,9 +180,9 @@ bool DungeonBuilder::is_square_valid(glm::vec2 room_location, std::vector<Door_D
 	if (occupied_square.empty()) { return false; } // Checks if the square is empty of doors, which means it exists
 	if (occupied_square[0] != EMPTY) { return false; } // A room exists here
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < DOOR_SIDES; i++) {
 		Door_Direction facing_direction = (Door_Direction)i;
-		Door_Direction opposite = (Door_Direction)((facing_direction + 2) % 4);
+		Door_Direction opposite = (Door_Direction)((facing_direction + 2) % DOOR_SIDES);
 
 		glm::vec2 adjacent_room = room_location + direction[i];
 		std::vector<Door_Direction> adjacent_room_doors = dungeon_map[(int)adjacent_room.x][(int)adjacent_room.y];

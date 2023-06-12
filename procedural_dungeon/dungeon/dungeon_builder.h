@@ -11,6 +11,8 @@
 #define DUNGEON_MAP_WIDTH 50
 #define DUNGEON_MAP_HEIGHT 50
 
+#define DOOR_SIDES 4
+
 #define TILE_MAX 15
 
 // Access using Dungeon_Door_Direction

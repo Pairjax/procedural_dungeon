@@ -110,6 +110,7 @@ int Game::init(int screen_width, int screen_height) {
             }
         )
     );
+
     models = dungeon_builder.generate_dungeon();
 
     glViewport(0, 0, screen_width, screen_height);
